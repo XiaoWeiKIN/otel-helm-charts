@@ -1,0 +1,11 @@
+{{- if .Values.configMap.create -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "otel-spring-webmvc.name" . }}
+  labels:
+    {{- include "otel-spring-webmvc.labels" . | nindent 4 }}
+data:
+  relay: |
+    {{- include "otel-spring-webmvc.deploymentConfig" . | nindent 4 -}}
+{{- end }}

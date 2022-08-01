@@ -1,0 +1,79 @@
+nameOverride: ""
+replicaCount: 1
+podLabels: {}
+podAnnotations: {}
+
+configMap:
+  # Specifies whether a configMap should be created (true by default)
+  create: true
+
+config: {}
+
+
+image:
+  repository: xiaoweiwang/otel-spring-webmvc
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+command:
+  extraArgs: []
+
+# Configuration for ports
+ports:
+  webmvc:
+    enabled: true
+    containerPort: 8080
+    servicePort: 8080
+    protocol: TCP
+
+extraEnvs: []
+extraVolumes: []
+extraVolumeMounts: []
+
+# List of init container specs, e.g. for copying a binary to be executed as a lifecycle hook.
+initContainers: []
+# initContainers:
+#   - name: test
+#     command:
+#       - cp
+#     args:
+#       - /bin/sleep
+#       - /test/sleep
+#     image: busybox:latest
+#     volumeMounts:
+#       - name: test
+#         mountPath: /test
+
+# Pod lifecycle policies.
+lifecycleHooks: {}
+# lifecycleHooks:
+#   preStop:
+#     exec:
+#       command:
+#       - /test/sleep
+#       - "5"
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 8080
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 8080
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+# Allows for pod scheduler prioritisation
+priorityClassName: ""
+
+

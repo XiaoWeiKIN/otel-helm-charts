@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "otel-spring-webmvc.name" . }}
+  labels:
+    {{- include "otel-spring-webmvc.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "otel-spring-webmvc.selectorLabels" . | nindent 6 }}
+      component: {{ include "otel-spring-webmvc.name" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "otel-spring-webmvc.selectorLabels" . | nindent 8 }}
+        component: {{ include "otel-spring-webmvc.name" . }}
+        {{- include "otel-spring-webmvc.podLabels" . | nindent 8 }}
+    spec:
+      {{- $podValues := deepCopy .Values }}
+      {{- $podData := dict "Values" $podValues}}
+      {{- include "otel-spring-webmvc.pod" ($podData | mustMergeOverwrite (deepCopy .)) | nindent 6 }}

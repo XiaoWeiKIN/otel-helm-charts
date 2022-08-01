@@ -1,0 +1,9 @@
+apiVersion: v2
+name: otel-spring-webmvc
+version: 0.22.1
+description: otel web samplse Helm chart for Kubernetes
+type: application
+maintainers:
+  - name: wangxiaowei
+icon: https://opentelemetry.io/img/logos/opentelemetry-logo-nav.png
+appVersion: 0.1.0
