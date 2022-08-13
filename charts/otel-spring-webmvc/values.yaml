@@ -5,7 +5,7 @@ podAnnotations: {}
 
 configMap:
   # Specifies whether a configMap should be created (true by default)
-  create: true
+  create: false
 
 config: {}
 
@@ -26,23 +26,28 @@ ports:
     servicePort: 8080
     protocol: TCP
 
-extraEnvs: []
-extraVolumes: []
-extraVolumeMounts: []
+extraEnvs:
+  - name: JVM_OPS
+    value: -Dotel.traces.exporter=otlp -Dotel.service.name=otel-spring-mvc -Dotel.exporter.otlp.endpoint=http://localhost:4317
+  - name: HOST_IP
+    valueFrom:
+      fieldRef:
+        apiVersion: v1
+        fieldPath: status.hostIP
+extraVolumes:
+  - emptyDir: {}
+    name: otel-agent
+extraVolumeMounts:
+  - mountPath: /app/otel
+    name: otel-agent
 
 # List of init container specs, e.g. for copying a binary to be executed as a lifecycle hook.
-initContainers: []
-# initContainers:
-#   - name: test
-#     command:
-#       - cp
-#     args:
-#       - /bin/sleep
-#       - /test/sleep
-#     image: busybox:latest
-#     volumeMounts:
-#       - name: test
-#         mountPath: /test
+initContainers:
+  - name: otel-agent
+    image: xiaoweiwang/opentelemetry-javaagent:1.6.0
+    volumeMounts:
+      - name: otel-agent
+        mountPath: /otel-agent
 
 # Pod lifecycle policies.
 lifecycleHooks: {}
@@ -54,15 +59,13 @@ lifecycleHooks: {}
 #       - "5"
 
 livenessProbe:
-  enabled: true
   httpGet:
-    path: /
+    path: /actuator/health/liveness
     port: 8080
 
 readinessProbe:
-  enabled: true
   httpGet:
-    path: /
+    path: /actuator/health/readiness
     port: 8080
 
 resources:

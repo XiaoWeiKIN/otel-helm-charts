@@ -28,11 +28,11 @@ containers:
     lifecycle:
       {{- toYaml .Values.lifecycleHooks | nindent 6 }}
     {{- end }}
-    {{- if and .Values.livenessProbe .Values.livenessProbe.enabled -}}
+    {{- if .Values.livenessProbe }}
     livenessProbe:
       {{- toYaml .Values.livenessProbe | nindent 6 }}
     {{- end }}
-    {{- if and .Values.readinessProbe .Values.readinessProbe.enabled -}}
+    {{- if .Values.readinessProbe }}
     readinessProbe:
       {{- toYaml .Values.readinessProbe | nindent 6 }}
     {{- end }}
